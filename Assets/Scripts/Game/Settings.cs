@@ -103,6 +103,9 @@ public class Settings : MonoBehaviour
     /// </summary>
     private static Settings sInstance;
     
+    // Player input manager
+    public PlayerInputManager playerInputManager;
+    
     /// <summary>
     /// Getter for the singleton Settings object.
     /// </summary>
@@ -136,6 +139,29 @@ public class Settings : MonoBehaviour
         
         if (gameManager)
         { mGameManager = gameManager.GetComponent<GameManager>(); }
+
+        if (playerInputManager)
+        {
+            playerInputManager.onPlayerJoined += OnPlayerJoined;
+            playerInputManager.onPlayerLeft += OnPlayerLeft;
+        }
+    }
+
+    private void OnPlayerJoined(PlayerInput playerInput)
+    {
+        AddPlayer(playerInput.gameObject);
+        
+        int idx = GetPlayerIndex(playerInput.gameObject);
+        GameObject ui = PlayerUI(idx);
+        if (ui)
+        {
+            ui.SetActive(true);
+        }
+    }
+    
+    private void OnPlayerLeft(PlayerInput playerInput)
+    {
+        RemovePlayer(playerInput.gameObject);
     }
     
     /// <summary>
